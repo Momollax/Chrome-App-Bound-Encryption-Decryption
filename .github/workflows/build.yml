@@ -1,4 +1,4 @@
-name: Build C++ Application
+name: Build chrome_decrypt
 
 on:
   push:
@@ -9,14 +9,18 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout code
+      uses: actions/checkout@v3
 
-      - name: Add MinGW to PATH
-        run: |
-          echo "C:\msys64\mingw64\bin" >> $env:GITHUB_PATH
+    - name: Set up MinGW
+      uses: egor-tensin/setup-mingw@v1
+      with:
+        architecture: x86_64
 
-      - name: Compile C++ code
-        run: |
-          g++ -o chrome_decrypt.exe chrome_decrypt.cpp
+    - name: Add MinGW to PATH
+      run: echo "C:\\mingw64\\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+
+    - name: Compile chrome_decrypt.cpp
+      run: g++ -o chrome_decrypt.exe chrome_decrypt.cpp -lversion -lole32
