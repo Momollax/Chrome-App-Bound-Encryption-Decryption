@@ -1,23 +1,31 @@
-name: Build chrome_decrypt.exe
+name: Windows Build
 
 on:
   push:
-    branches: [main]
+    branches: [ "main" ]
   pull_request:
-    branches: [main]
+    branches: [ "main" ]
 
 jobs:
-  build:
+  build-windows:
     runs-on: windows-latest
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up MinGW
-        uses: egor-tensin/setup-mingw@v1
-        with:
-          architecture: x64
+      - name: Configure MSVC environment
+        # Sur l'image windows-latest, Visual Studio est déjà installé
+        # Vous pouvez donc directement invoquer `cl`.
+        run: |
+          echo "Configuration de l'environnement MSVC"
 
-      - name: Compile chrome_decrypt.cpp
-        run: g++ -o chrome_decrypt.exe chrome_decrypt.cpp -lole32 -lversion -loleaut32
+      - name: Build with MSVC
+        run: |
+          cl /EHsc /nologo /std:c++17 /O2 ChromeAppBoundDecrypt.cpp /link /OUT:ChromeAppBoundDecrypt.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: ChromeAppBoundDecrypt
+          path: ChromeAppBoundDecrypt.exe
