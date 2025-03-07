@@ -22,10 +22,10 @@ jobs:
 
       - name: Build with MSVC
         run: |
-          cl /EHsc /nologo /std:c++17 /O2 ChromeAppBoundDecrypt.cpp /link /OUT:ChromeAppBoundDecrypt.exe
+          cl /EHsc /nologo /std:c++17 /O2 chrome_decrypt.cpp /link /OUT:chrome_decrypt.exe
 
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
-          name: ChromeAppBoundDecrypt
-          path: ChromeAppBoundDecrypt.exe
+          name: chrome_decrypt.cpp
+          path: chrome_decrypt.exe
