@@ -1,0 +1,24 @@
+name: Build C++ Application
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up MinGW
+        uses: egor-tensin/setup-gcc@v1
+        with:
+          version: 'latest'
+          platform: 'x64'
+
+      - name: Compile C++ code
+        run: |
+          g++ -o chrome_decrypt.exe ./chrome_decrypt.cpp
