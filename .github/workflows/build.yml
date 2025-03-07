@@ -1,4 +1,4 @@
-name: Build C++ Application
+name: Build chrome_decrypt.exe
 
 on:
   push:
@@ -11,8 +11,13 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Compile with g++
-      run: g++ -o chrome_decrypt.exe chrome_decrypt.cpp -lole32 -lversion
+      - name: Set up MinGW
+        uses: egor-tensin/setup-mingw@v1
+        with:
+          architecture: x64
+
+      - name: Compile chrome_decrypt.cpp
+        run: g++ -o chrome_decrypt.exe chrome_decrypt.cpp -lole32 -lversion -loleaut32
