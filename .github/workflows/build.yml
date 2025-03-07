@@ -1,4 +1,4 @@
-name: Windows Build
+name: Windows Build (MinGW)
 
 on:
   push:
@@ -14,14 +14,19 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build with MSVC
-        # Visual Studio est déjà présent sur le runner Windows.
-        # On invoque cl.exe directement.
+      - name: Set up MSYS2 (MinGW)
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          install: mingw-w64-x86_64-gcc
+          path-type: inherit
+
+      - name: Build with g++
         run: |
-          cl /EHsc /nologo /std:c++17 /O2 chrome_decrypt.cpp /link /OUT:chrome_decrypt.exe
+          # Compile en statique (-static) pour générer un exécutable autonome
+          g++ -std=c++17 -O2 -static -o chrome_decrypt.exe chrome_decrypt.cpp
 
       - name: Upload artifact
-        # Utilisez une version précise pour éviter les problèmes de résolution
         uses: actions/upload-artifact@v3.1.2
         with:
           name: chrome_decrypt
