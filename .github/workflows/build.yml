@@ -1,33 +1,31 @@
-name: Windows Build (MinGW)
+name: Build and Download .exe
 
 on:
   push:
-    branches: [ "main" ]
+    branches:
+      - main
   pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
-  build-windows:
+  build:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up MSYS2 (MinGW)
-        uses: msys2/setup-msys2@v2
-        with:
-          update: true
-          install: mingw-w64-x86_64-gcc
-          path-type: inherit
-
-      - name: Build with g++
+      - name: Configure and build
         run: |
-          # Compile en statique (-static) pour générer un exécutable autonome
-          g++ -std=c++17 -O2 -static -o chrome_decrypt.exe chrome_decrypt.cpp
+          mkdir build
+          cd build
+          cmake -A x64 -DCMAKE_BUILD_TYPE=Release ..
+          cmake --build . --config Release
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v3.1.2
+      - name: Upload executable
+        uses: actions/upload-artifact@v3
         with:
-          name: chrome_decrypt
-          path: chrome_decrypt.exe
+          name: chrome_decrypt.exe
+          # Le binaire se trouvera dans build/Release/chrome_decrypt.exe
+          path: build/Release/chrome_decrypt.exe
