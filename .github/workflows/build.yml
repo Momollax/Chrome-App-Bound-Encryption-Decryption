@@ -14,18 +14,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Configure MSVC environment
-        # Sur l'image windows-latest, Visual Studio est déjà installé
-        # Vous pouvez donc directement invoquer `cl`.
-        run: |
-          echo "Configuration de l'environnement MSVC"
-
       - name: Build with MSVC
+        # Visual Studio est déjà présent sur le runner Windows.
+        # On invoque cl.exe directement.
         run: |
           cl /EHsc /nologo /std:c++17 /O2 chrome_decrypt.cpp /link /OUT:chrome_decrypt.exe
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3
+        # Utilisez une version précise pour éviter les problèmes de résolution
+        uses: actions/upload-artifact@v3.1.2
         with:
-          name: chrome_decrypt.cpp
+          name: chrome_decrypt
           path: chrome_decrypt.exe
