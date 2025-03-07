@@ -23,8 +23,8 @@ jobs:
           cmake -A x64 -DCMAKE_BUILD_TYPE=Release ..
           cmake --build . --config Release
 
-      - name: Upload executable
-        uses: actions/upload-pages-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: chrome_decrypt.exe
           path: build/Release/chrome_decrypt.exe
