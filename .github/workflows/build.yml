@@ -24,7 +24,7 @@ jobs:
           cmake --build . --config Release
 
       - name: Upload executable
-          uses: actions/upload-artifact@v3.1.2
-          with:
-            name: chrome_decrypt.exe
-            path: build/Release/chrome_decrypt.exe
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: chrome_decrypt.exe
+          path: build/Release/chrome_decrypt.exe
