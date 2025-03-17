@@ -14,7 +14,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/upload-artifact@v4
+        uses: actions/checkout@v3
 
       - name: Set up MSVC and Compile
         shell: cmd
@@ -26,7 +26,25 @@ jobs:
 
       - name: Upload Artifact
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: chrome_decrypt.exe
           path: chrome_decrypt.exe
+
+      - name: Get Version Tag
+        id: get_version
+        shell: bash
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
+          version=${latest_tag%.*}.$((${latest_tag##*.}+1))
+          echo "version=$version" >> $GITHUB_ENV
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ env.version }}
+          release_name: "Release ${{ env.version }}"
+          body: "Automated release of chrome_decrypt.exe."
+          files: chrome_decrypt.exe
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
