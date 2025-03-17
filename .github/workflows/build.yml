@@ -26,41 +26,7 @@ jobs:
 
       - name: Upload Artifact
         if: success()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: chrome_decrypt.exe
           path: chrome_decrypt.exe
-
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-
-      - name: Download Build Artifact
-        uses: actions/download-artifact@v3
-        with:
-          name: chrome_decrypt.exe
-
-      - name: Get Version Tag
-        id: get_version
-        run: |
-          # Get the latest tag, fallback to v1.0.0 if no tags are present
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v1.0.0")
-          
-          # Increment the patch version (e.g., v1.0.0 -> v1.0.1)
-          version=${latest_tag%.*}.$((${latest_tag##*.}+1))
-          
-          # Set the new version as an output
-          echo "version=$version" >> $GITHUB_ENV
-
-      - name: Create Release
-        uses: softprops/action-gh-release@v1
-        with:
-          tag_name: ${{ env.version }}
-          release_name: "Release ${{ env.version }}"
-          body: "Automated release of chrome_decrypt.exe."
-          files: chrome_decrypt.exe
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
